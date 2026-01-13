@@ -45,6 +45,8 @@ yarn-error.log*
 migrations
 src/generated
 dev.db
+dev.db.backup
+dev.db.bak
 dev.db-journal
 mysql2sqlite
 pscale*

@@ -7,7 +7,7 @@ import { getUserById } from "./server/utils/user";
 import { getTwoFactorConfirmationByUserId } from "./server/utils/two-factor-confirm";
 import { getAccountByUserId } from "./server/utils/account";
 import { env } from "./env.mjs";
-import { checkBlockedEmail } from "./server/actions/auth";
+import { checkBlockedEmail } from "@/server/utils/blocked-emails";
 
 export const {
   handlers: { GET, POST },

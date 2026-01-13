@@ -10,6 +10,7 @@ import { cn } from "@/utils";
 import { sharedAnimationCards } from "@/components/auth/animation-cards";
 import SocialLogin from "@/components/auth/social-login";
 import Logo from "@/components/icons/logo";
+import AuthFlow from "@/components/auth/auth-flow";
 
 const AuthLoginPage = () => {
   return (
@@ -25,6 +26,9 @@ const AuthLoginPage = () => {
       </CardHeader>
       <CardContent className="grid gap-4 duration-500 animate-in fade-in-30">
         <SocialLogin />
+        <div className="flex flex-col gap-2">
+          <AuthFlow />
+        </div>
       </CardContent>
     </Card>
   );
