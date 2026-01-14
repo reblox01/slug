@@ -1,7 +1,7 @@
 import ExternalLink from "@/ui/external-link";
 import { cn } from "@/utils";
 import React from "react";
-import { XLogo } from "../icons/logos";
+import { XLogo, GithubLogo } from "../icons/logos";
 import { ArrowUpRight } from "lucide-react";
 
 interface FooterProps {
@@ -27,6 +27,17 @@ const Footer = (props: FooterProps) => {
             <p className="hidden md:block">Twitter</p>
             <ArrowUpRight size={14} />
           </ExternalLink>
+          <div className="hidden md:flex items-center space-x-1 text-sm text-neutral-500">
+            <GithubLogo className="h-4 w-4 ml-2" />
+            <span>Inspired by</span>
+            <ExternalLink
+              href="https://github.com/pheralb/slug.git"
+              className="flex items-center space-x-1"
+            >
+              <span className="underline">Pheralb</span>
+              <ArrowUpRight size={14} />
+            </ExternalLink>
+          </div>
         </div>
       </div>
     </footer>
