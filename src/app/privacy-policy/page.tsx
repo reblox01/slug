@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Privacy Policy - Slug",
+  title: "Privacy Policy",
   description: "Privacy policy for Slug - an open-source URL shortener.",
 };
 

@@ -9,6 +9,8 @@ import {
   SproutIcon,
   SunIcon,
   TelescopeIcon,
+  HeartHandshake,
+  EarthLock
 } from "lucide-react";
 import { GithubLogo, XLogo } from "@/components/icons/logos";
 
@@ -68,6 +70,16 @@ export const DocumentationPages = [
     name: "Report a Bug",
     href: "https://github.com/reblox01/slug/issues/new/choose",
     icon: BugIcon,
+  },
+  {
+    name: "Privacy policy",
+    href: "/privacy-policy",
+    icon: EarthLock,
+  },
+  {
+    name: "Terms of service",
+    href: "/terms-of-service",
+    icon: HeartHandshake,
   }
 ];
 

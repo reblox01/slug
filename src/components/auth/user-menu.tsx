@@ -7,9 +7,11 @@ import {
   HomeIcon,
   LayoutDashboardIcon,
   SettingsIcon,
+  ShieldCheck,
+  FileText,
+  MessageCircleWarning
 } from "lucide-react";
 import Link from "next/link";
-import { XLogo } from "@/components/icons/logos";
 
 const UserMenu = () => {
   const iconSize = 15;
@@ -39,6 +41,36 @@ const UserMenu = () => {
         className="flex w-full items-center justify-between"
       >
         <Link
+          href="/privacy-policy"
+          target="_blank"
+        >
+          <div className="flex items-center space-x-3">
+            <ShieldCheck size={iconSize} />
+            <span>Privacy policy</span>
+          </div>
+          <ArrowUpRight size={iconSize} className="opacity-40" />
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        asChild
+        className="flex w-full items-center justify-between"
+      >
+        <Link
+          href="/terms-of-service"
+          target="_blank"
+        >
+          <div className="flex items-center space-x-3">
+            <FileText size={iconSize} />
+            <span>Terms of service</span>
+          </div>
+          <ArrowUpRight size={iconSize} className="opacity-40" />
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem
+        asChild
+        className="flex w-full items-center justify-between"
+      >
+        <Link
           href="https://github.com/reblox01/slug/issues/new/choose"
           target="_blank"
         >
@@ -53,9 +85,9 @@ const UserMenu = () => {
         asChild
         className="flex w-full items-center justify-between"
       >
-        <Link href="https://twitter.com/arosck1" target="_blank">
+        <Link href="https://sohailkoutari.com/contact" target="_blank">
           <div className="flex items-center space-x-3">
-            <XLogo width={iconSize} />
+            <MessageCircleWarning width={16} />
             <span>Contact</span>
           </div>
           <ArrowUpRight size={iconSize} className="opacity-40" />

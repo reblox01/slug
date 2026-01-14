@@ -1,8 +1,9 @@
 import ExternalLink from "@/ui/external-link";
+import Link from "next/link";
 import { cn } from "@/utils";
 import React from "react";
 import { XLogo, GithubLogo } from "../icons/logos";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, FileText, ShieldCheck } from "lucide-react";
 
 interface FooterProps {
   className?: string;
@@ -38,6 +39,25 @@ const Footer = (props: FooterProps) => {
               <ArrowUpRight size={14} />
             </ExternalLink>
           </div>
+        </div>
+
+        <div className="hidden md:flex items-center space-x-4">
+          <Link
+            href="/privacy-policy"
+            className="flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+          >
+            <ShieldCheck size={16} />
+            <span>Privacy Policy</span>
+            <ArrowUpRight size={14} />
+          </Link>
+          <Link
+            href="/terms-of-service"
+            className="flex items-center gap-2 text-sm text-neutral-600 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+          >
+            <FileText size={16} />
+            <span>Terms Of Service</span>
+            <ArrowUpRight size={14} />
+          </Link>
         </div>
       </div>
     </footer>

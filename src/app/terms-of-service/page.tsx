@@ -1,5 +1,5 @@
 export const metadata = {
-  title: "Terms of Service - Slug",
+  title: "Terms of Service",
   description: "Terms of Service for Slug - an open-source URL shortener.",
 };
 
