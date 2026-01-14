@@ -8,11 +8,13 @@
  import { useRouter, useSearchParams } from "next/navigation";
  import { toast } from "sonner";
  import { DEFAULT_LOGIN_REDIRECT_URL } from "@/routes";
+import Link from "next/link";
 
 const SignupForm = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -20,6 +22,10 @@ const SignupForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!acceptTerms) {
+      toast.error("You must accept the Terms of Service and Privacy Policy");
+      return;
+    }
     try {
       setLoading(true);
       const res = await fetch("/api/auth/signup", {
@@ -84,6 +90,25 @@ const SignupForm = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <label className="inline-flex items-center gap-2 text-sm text-neutral-500 dark:text-neutral-400">
+        <input
+          type="checkbox"
+          checked={acceptTerms}
+          onChange={(e) => setAcceptTerms(e.target.checked)}
+          className="h-4 w-4 rounded border"
+        />
+        <span>
+          By signing up you accept our{" "}
+          <Link href="/terms-of-service" className="underline hover:text-neutral-900 dark:hover:text-neutral-50" target="_blank">
+            Terms of Service
+          </Link>{" "}
+          and{" "}
+          <Link href="/privacy-policy" className="underline hover:text-neutral-900 dark:hover:text-neutral-50" target="_blank">
+            Privacy Policy
+          </Link>
+          .
+        </span>
+      </label>
       <Button type="submit" disabled={loading}>
         {loading ? "Creating account..." : "Create account"}
       </Button>

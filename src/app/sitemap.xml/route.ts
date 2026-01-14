@@ -7,6 +7,8 @@ export async function GET() {
     "/check",
     "/link-expired",
     "/password",
+    "/privacy-policy",
+    "/terms-of-service",
   ];
 
   const sitemap = `<?xml version="1.0" encoding="UTF-8"?>\n` +
