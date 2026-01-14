@@ -44,7 +44,7 @@
 
 ## 👨‍🚀 Introduction
 
-[**Slug**](slug.vercel.app) is a service that offers to shorten urls in a simple, fast and secure way. It's built with [**T3 Stack**](https://create.t3.gg/), a web development stack made by [**Theo**](https://twitter.com/t3dotgg) focused on simplicity, modularity, and full-stack **typesafety**.
+[**Slug**](slu9.vercel.app) is a service that offers to shorten urls in a simple, fast and secure way. It's built with [**T3 Stack**](https://create.t3.gg/), a web development stack made by [**Theo**](https://twitter.com/t3dotgg) focused on simplicity, modularity, and full-stack **typesafety**.
 
 > Inspired by and based on work from [pheralb/slug](https://github.com/pheralb/slug.git). Thanks to Pheralb for the original project and ideas.
 
@@ -230,7 +230,7 @@ This is the roadmap I will be following for the complete migration to v3:
 
 ## ☁️ Deploy on Vercel
 
-- ✅ [slug.vercel.app](https://slu9.vercel.app/).
+- ✅ [slu9.vercel.app](https://slu9.vercel.app/).
 
 ## 🔑 License
 
