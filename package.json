@@ -39,6 +39,7 @@
     "@radix-ui/react-tooltip": "1.0.7",
     "@t3-oss/env-nextjs": "0.10.1",
     "@tabler/icons-react": "^3.36.1",
+    "@vercel/analytics": "^1.6.1",
     "bcryptjs": "2.4.3",
     "boring-avatars": "1.10.2",
     "cheerio": "1.0.0-rc.12",

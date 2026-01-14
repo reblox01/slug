@@ -10,6 +10,7 @@ import { ToasterComponent } from "@/components/providers/toaster";
 
 // External scripts:
 import Script from "next/script";
+import { Analytics } from "@vercel/analytics/react";
 
 // Layout:
 import Header from "@/components/layout/header";
@@ -157,6 +158,7 @@ export default function RootLayout({
           src="https://umami.pheralb.dev/script.js"
           data-website-id="2495697e-383c-418c-ac85-d8be8837b686"
         />
+        <Analytics />
       </body>
     </html>
   );
