@@ -52,13 +52,25 @@ This project uses the following technologies:
 
 - [**create-t3-app**](https://create.t3.gg) - The best way to start a full-stack, typesafe Next.js app.
 - [**Next.js 14 App Router**](https://nextjs.org/) - The React Framework for the Web.
-- [**Auth.js v5**](https://authjs.dev/) - Authentication for the Web.
-- [**Prisma**](https://prisma.io) - A next-generation Node.js and TypeScript ORM.
+- [**Auth.js v5**](https://authjs.dev/) - Authentication for the Web (OAuth & Credentials).
+- [**Prisma 7**](https://prisma.io) - A next-generation Node.js and TypeScript ORM.
 - [**Turso**](https://turso.tech/) (SQLite) + [**libSQL**](https://github.com/tursodatabase/libsql) - SQLite for Production.
 - [**Next.js Server Actions**](https://nextjs.org/docs/api-reference/server-actions) - Asynchronous functions that are executed on the server.
 - [**TailwindCSS**](https://tailwindcss.com) + [**shadcn/ui**](https://ui.shadcn.com) & [**Radix Primitives**](https://www.radix-ui.com) - Design System.
-- [**Prettier**](https://prettier.io) with [**prettier-plugin-tailwindcss**](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) - Code Formatter.
 - [**Lucide Icons**](https://lucide.dev) + [**svgl**](https://svgl.app) - Beautiful SVG icons & logos for the web.
+
+### ✨ Features
+
+- **Quick Shortening**: Create short URLs in seconds.
+- **2FA Security**: Protect your account with Two-Factor Authentication.
+- **Password Protected Links**: Secure your short URLs with a password.
+- **QR Code Support**: Generate QR codes for easy sharing.
+- **Command Palette (Cmd+K)**: Fast navigation and search across the app.
+- **Link Analytics**: Track clicks and usage for your links.
+- **Tags Management**: Organize your links with custom tags.
+- **Modern Landing Page**: Redesigned Hero, Stats, and Testimonials sections.
+- **Link Limits**: Managed link limits based on user settings.
+- **Account Management**: Change name, email, or delete your account.
 
 > ⚠️ This is a community project, not associated with [Vercel](https://vercel.com/).
 
@@ -178,19 +190,19 @@ This is the roadmap I will be following for the complete migration to v3:
 
 ⬆️ **Known issues:**
 
-- ⚙️ Fix issue when logging in with different provider but with the same email. Redirect to an existing route in the app ([authjs error](https://authjs.dev/reference/core/errors#accountnotlinked)).
+- ✅ Fix issue when logging in with different provider but with the same email. Redirect to an existing route in the app ([authjs error](https://authjs.dev/reference/core/errors#accountnotlinked)).
 
 ⬆️ **Dependencies:**
 
-- ✅ Update `@prisma/adapter-libsql`, `@prisma/client` & `prisma` to the stable version when it's released.
-- ⚙️ Update `authjs` to the stable version (v5) when it's released.
+- ✅ Update `@prisma/adapter-libsql`, `@prisma/client` & `prisma` to Prisma 7.
+- ✅ Update `authjs` to v5.
 
 ⬆️ **Auth:**
 
 - ✅ Sign In with Github.
-- 🔔 Sign In with Google.
-
-🔔 Only for users who have not previously logged in with an existing email address in their Github account. This is an issue that will be worked on soon.
+- ✅ Sign In with Google.
+- ✅ Sign In with Email/Password.
+- ✅ Two-Factor Authentication (2FA).
 
 ⬆️ **Middleware:**
 
@@ -202,16 +214,18 @@ This is the roadmap I will be following for the complete migration to v3:
 - ✅ Create a new short URL.
 - ✅ List all shorted URLs.
 - ✅ Delete a shorted URL.
-- ✅ Update a shorted URL.`
+- ✅ Update a shorted URL.
+- ✅ Expiration date for links.
+- ✅ Password protect a link.
+- ✅ QR Code generation.
+- ✅ Command Palette (Cmd+K).
 
 ⬆️ **Dashboard (tags):**
 
 - ✅ Add search links by tags in the dashboard.
-- 🔔 Create a new tag.
+- ✅ Create a new tag.
 - ✅ Delete a tag.
-- ⚙️ Update the tags of a link.
-
-🔔 Add option to change tag color.
+- ✅ Update the tags of a link.
 
 ⬆️ **Dashboard (settings):**
 
@@ -219,6 +233,7 @@ This is the roadmap I will be following for the complete migration to v3:
 - ✅ Change email.
 - ✅ Delete account.
 - ✅ Download all links data.
+- ✅ Manage link limits and status.
 
 ## ✌️ Contributing
 
@@ -227,6 +242,14 @@ This is the roadmap I will be following for the complete migration to v3:
 </a>
 
 <p></p>
+
+## Support
+
+**If you appreciate my work and want to support my open-source contributions:**
+
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://www.buymeacoffee.com/arosck1)
+[![Sponsor](https://img.shields.io/badge/GitHub%20Sponsors-EA4AAA?style=for-the-badge&logo=github-sponsors&logoColor=white)](https://github.com/sponsors/reblox01)
+[![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white)](https://paypal.me/sohailkoutari)
 
 ## ☁️ Deploy on Vercel
 
