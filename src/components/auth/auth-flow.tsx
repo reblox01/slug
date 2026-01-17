@@ -177,7 +177,7 @@ const AuthFlow = () => {
               Back
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Signing in..." : "Sign in with email"}
+              {loading ? "Signing in..." : "Sign in"}
             </Button>
           </div>
           <div className="my-2 border-t border-neutral-800/40" />

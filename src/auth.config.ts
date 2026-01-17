@@ -1,4 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
+import { CredentialsSignin } from "next-auth";
 import Github from "next-auth/providers/github";
 import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
@@ -7,6 +8,12 @@ import { env } from "./env.mjs";
 import { db } from "./server/db";
 import bcrypt from "bcryptjs";
 import { checkBlockedEmail } from "@/server/utils/blocked-emails";
+import { loginLimiter } from "@/utils/login-limiter";
+import { headers } from "next/headers";
+
+class RateLimitError extends CredentialsSignin {
+  code = "rate-limit";
+}
 
 export default {
   providers: [
@@ -26,6 +33,14 @@ export default {
         password: { label: "Password", type: "password" },
       },
       authorize: async (credentials) => {
+        const ip = headers().get("x-forwarded-for") ?? "127.0.0.1";
+
+        try {
+          loginLimiter.check(ip);
+        } catch (error) {
+          throw new RateLimitError();
+        }
+
         if (!credentials?.email || !credentials?.password) return null;
 
         const user = await db.user.findUnique({
@@ -33,24 +48,33 @@ export default {
         });
 
         if (!user?.password) {
+          loginLimiter.registerFailure(ip);
           return null;
         }
 
         // Blocked emails cannot sign in
         const emailBlocked = await checkBlockedEmail(user.email!);
-        if (emailBlocked) return null;
+        if (emailBlocked) {
+          loginLimiter.registerFailure(ip);
+          return null;
+        }
 
         const isValid = await bcrypt.compare(
           credentials.password as string,
           user.password,
         );
         if (!isValid) {
+          loginLimiter.registerFailure(ip);
           return null;
         }
 
         // Require email verification for credential sign in
-        if (!user.emailVerified) return null;
+        if (!user.emailVerified) {
+          loginLimiter.registerFailure(ip);
+          return null;
+        }
 
+        loginLimiter.reset(ip);
         return user;
       },
     }),

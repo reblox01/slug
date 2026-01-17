@@ -1,13 +1,14 @@
 "use server";
 
 import type { z } from "zod";
-import type { CreateLinkSchema, EditLinkSchema } from "@/server/schemas";
+import { CreateLinkSchema, EditLinkSchema } from "@/server/schemas";
 
 import { auth } from "@/auth";
 import { db } from "@/server/db";
 
 import { revalidatePath } from "next/cache";
 import bcrypt from "bcryptjs";
+import { rateLimiter } from "@/utils/rate-limit";
 
 /**
  * Get single link data.
@@ -70,8 +71,21 @@ export const createLink = async (
   const currentUser = await auth();
 
   if (!currentUser) {
-    console.error("Not authenticated.");
     return { error: "Not authenticated. Please login again." };
+  }
+
+  // Runtime Validation
+  const validatedFields = CreateLinkSchema.safeParse(values);
+  if (!validatedFields.success) {
+    return { error: "Invalid fields." };
+  }
+
+  // Rate Limiting
+  const userIdentifier = currentUser.user?.id ?? "anonymous";
+  try {
+    await rateLimiter.check(3, userIdentifier); // 3 requests per minute
+  } catch {
+    return { error: "Rate limit exceeded. Please try again later." };
   }
 
   // Get number of links created by the user:
@@ -82,7 +96,7 @@ export const createLink = async (
   });
 
   // Check if the user has reached the limit:
-  const limit = currentUser.user?.limitLinks;
+  const limit = currentUser.user?.limitLinks ?? 10;
   if (count >= limit) {
     return {
       limit: true,
@@ -127,8 +141,22 @@ export const updateLink = async (values: z.infer<typeof EditLinkSchema>) => {
   const currentUser = await auth();
 
   if (!currentUser) {
-    console.error("Not authenticated.");
     return null;
+  }
+
+  const userIdentifier = currentUser.user?.id ?? "anonymous";
+  try {
+    await rateLimiter.check(10, userIdentifier); // Higher limit for updates
+  } catch {
+    console.error("Rate limit exceeded for updateLink");
+    return;
+  }
+
+  // Runtime Validation
+  const validatedFields = EditLinkSchema.safeParse(values);
+  if (!validatedFields.success) {
+    console.error("Invalid fields for updateLink");
+    return;
   }
 
   // Update link:
@@ -165,6 +193,13 @@ export const deleteLink = async (id: string) => {
 
   if (!currentUser) {
     console.error("Not authenticated.");
+    return null;
+  }
+
+  const userIdentifier = currentUser.user?.id ?? "anonymous";
+  try {
+    await rateLimiter.check(10, userIdentifier); // Higher limit for deletes
+  } catch {
     return null;
   }
 
