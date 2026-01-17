@@ -38,12 +38,12 @@ import {
   ShuffleIcon,
   TagsIcon,
   LockIcon,
-  CalendarIcon,
   EyeIcon,
   EyeOffIcon,
 } from "lucide-react";
 import { insertTagToLink } from "@/server/actions/tags";
 import SelectTagsLink from "./select-tags-link";
+import { DateTimePicker } from "@/ui/date-time-picker";
 
 interface CreateLinkProps {
   children: ReactNode;
@@ -162,7 +162,7 @@ export function CreateLink(props: CreateLinkProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="scrollbar-hide">
         <DialogHeader className="mb-2">
           <DialogTitle>Create new link</DialogTitle>
         </DialogHeader>
@@ -267,26 +267,12 @@ export function CreateLink(props: CreateLinkProps) {
                   <FormItem>
                     <FormLabel>Expiration (optional):</FormLabel>
                     <FormControl>
-                      <div className="relative flex items-center">
-                        <CalendarIcon size={14} className="absolute left-3 text-neutral-500" />
-                        <Input
-                          type="datetime-local"
-                          className="pl-9"
-                          disabled={loading}
-                          min={new Date().toISOString().slice(0, 16)}
-                          onChange={(e) => {
-                            const date = new Date(e.target.value);
-                            field.onChange(date);
-                          }}
-                          value={
-                            field.value instanceof Date
-                              ? new Date(field.value.getTime() - field.value.getTimezoneOffset() * 60000)
-                                .toISOString()
-                                .slice(0, 16)
-                              : ""
-                          }
-                        />
-                      </div>
+                      <DateTimePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        disabled={loading}
+                        placeholder="mm/dd/yyyy --:-- --"
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

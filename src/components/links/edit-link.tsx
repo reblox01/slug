@@ -1,7 +1,7 @@
 "use client";
 
 import type { Links, Tags } from "@/generated/client";
-import { useState, type ReactNode } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import type { z } from "zod";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +21,7 @@ import {
   DialogTrigger,
 } from "@/ui/dialog";
 import { Button } from "@/ui/button";
-import { LoaderIcon, LockIcon, LockOpenIcon, SaveIcon, CalendarIcon, EyeIcon, EyeOffIcon, TrashIcon } from "lucide-react";
+import { LoaderIcon, LockIcon, LockOpenIcon, SaveIcon, EyeIcon, EyeOffIcon, TrashIcon, X } from "lucide-react";
 import Alert from "@/ui/alert";
 import {
   Form,
@@ -34,6 +34,8 @@ import {
 import { Input, Textarea } from "@/ui/input";
 import { EditLinkSchema } from "@/server/schemas";
 import { Popover, PopoverContent, PopoverTrigger } from "@/ui/popover";
+import { DateTimePicker } from "@/ui/date-time-picker";
+
 
 interface EditLinkProps {
   trigger: ReactNode;
@@ -61,6 +63,18 @@ const EditLink = (props: EditLinkProps) => {
       expiresAt: props.link.expiresAt ? new Date(props.link.expiresAt) : null,
     },
   });
+
+  useEffect(() => {
+    if (open) {
+      form.reset({
+        id: props.link.id,
+        url: props.link.url,
+        slug: props.link.slug,
+        description: props.link.description ?? "",
+        expiresAt: props.link.expiresAt ? new Date(props.link.expiresAt) : null,
+      });
+    }
+  }, [props.link, form, open]);
 
   // Form Submit method:
   const onSubmit = async (values: z.infer<typeof EditLinkSchema>) => {
@@ -96,7 +110,7 @@ const EditLink = (props: EditLinkProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent className="scrollbar-hide">
         <DialogHeader className="overflow-hidden">
           <DialogTitle>Edit link</DialogTitle>
           <DialogDescription className="block truncate">
@@ -192,45 +206,59 @@ const EditLink = (props: EditLinkProps) => {
               <FormField
                 control={form.control}
                 name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Password {props.link.password && "(Active)"}:
-                    </FormLabel>
-                    <FormControl>
-                      <div className="relative flex items-center">
-                        <LockIcon size={14} className="absolute left-3 text-neutral-500" />
-                        <Input
-                          {...field}
-                          type={showPassword ? "text" : "password"}
-                          className="pl-9 pr-10"
-                          // Use defaultValue if not controlled, but we are using controlled field from react-hook-form
-                          placeholder={props.link.password ? "Change password" : "Set password"}
-                          disabled={loading}
-                        />
-                        <button
+                render={({ field }) => {
+                  // Determine if password is considered "Active" for UI purposes
+                  // It's active if:
+                  // 1. Originally active (props.link.password) AND NOT explicitly removed (empty string & dirty)
+                  // 2. OR User has typed a new password (length > 0)
+                  const originalHasPassword = !!props.link.password;
+                  const userTypedPassword = (field.value?.length ?? 0) > 0;
+                  const userRemovedPassword = field.value === ""; // dirty check implied if value is set to empty string from button
+
+                  // If user typed something, it's active (new password)
+                  // If user hasn't typed anything (undefined), fallback to original.
+                  // If user explicitly removed (empty string), it's inactive.
+                  const isPasswordActive = userTypedPassword || (originalHasPassword && !userRemovedPassword && field.value === undefined);
+
+                  return (
+                    <FormItem>
+                      <FormLabel>
+                        Password {isPasswordActive ? "(Active)" : originalHasPassword ? "(Removed)" : ""}
+                      </FormLabel>
+                      <FormControl>
+                        <div className="relative flex items-center">
+                          <LockIcon size={14} className="absolute left-3 text-neutral-500" />
+                          <Input
+                            {...field}
+                            type={showPassword ? "text" : "password"}
+                            className="pl-9 pr-10"
+                            placeholder={isPasswordActive ? "Change password" : "Set password"}
+                            disabled={loading}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowPassword(!showPassword)}
+                            className="absolute right-0 top-0 flex h-full items-center px-3 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+                          >
+                            {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
+                          </button>
+                        </div>
+                      </FormControl>
+                      {isPasswordActive && (
+                        <Button
                           type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute right-0 top-0 flex h-full items-center px-3 text-neutral-500 hover:text-neutral-700 dark:hover:text-neutral-300"
+                          variant="ghost"
+                          size="sm"
+                          className="mt-1 h-auto p-0 text-xs text-red-500 hover:bg-transparent hover:text-red-600"
+                          onClick={() => form.setValue("password", "", { shouldDirty: true })}
                         >
-                          {showPassword ? <EyeOffIcon size={16} /> : <EyeIcon size={16} />}
-                        </button>
-                      </div>
-                    </FormControl>
-                    {props.link.password && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="mt-1 h-auto p-0 text-xs text-red-500 hover:bg-transparent hover:text-red-600"
-                        onClick={() => form.setValue("password", "", { shouldDirty: true })}
-                      >
-                        <TrashIcon size={12} className="mr-1" /> Remove Password
-                      </Button>
-                    )}
-                    <FormMessage />
-                  </FormItem>
-                )}
+                          <TrashIcon size={12} className="mr-1" /> Remove Password
+                        </Button>
+                      )}
+                      <FormMessage />
+                    </FormItem>
+                  );
+                }}
               />
               <FormField
                 control={form.control}
@@ -239,42 +267,29 @@ const EditLink = (props: EditLinkProps) => {
                   <FormItem>
                     <FormLabel>Expiration (optional):</FormLabel>
                     <FormControl>
-                      <div className="relative flex items-center">
-                        <CalendarIcon size={14} className="absolute left-3 text-neutral-500" />
-                        <Input
-                          type="datetime-local"
-                          className="pl-9"
+                      <div className="relative">
+                        <DateTimePicker
+                          value={field.value}
+                          onChange={field.onChange}
                           disabled={loading}
-                          min={new Date().toISOString().slice(0, 16)}
-                          onChange={(e) => {
-                            const value = e.target.value;
-                            if (!value) {
-                              field.onChange(null);
-                            } else {
-                              field.onChange(new Date(value));
-                            }
-                          }}
-                          value={
-                            field.value instanceof Date
-                              ? new Date(field.value.getTime() - field.value.getTimezoneOffset() * 60000)
-                                .toISOString()
-                                .slice(0, 16)
-                              : ""
-                          }
+                          placeholder="mm/dd/yyyy --:-- --"
                         />
+                        {field.value && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              field.onChange(null);
+                            }}
+                            className="group absolute right-2 top-1/2 -translate-y-1/2 rounded-sm p-1 text-neutral-500 opacity-50 hover:bg-neutral-100 hover:opacity-100 dark:hover:bg-neutral-800"
+                            title="Clear date"
+                          >
+                            <X size={14} className="group-hover:hidden" />
+                            <TrashIcon size={14} className="hidden group-hover:block" />
+                          </button>
+                        )}
                       </div>
                     </FormControl>
-                    {field.value && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        className="mt-1 h-auto p-0 text-xs text-red-500 hover:bg-transparent hover:text-red-600"
-                        onClick={() => form.setValue("expiresAt", null, { shouldDirty: true })}
-                      >
-                        <TrashIcon size={12} className="mr-1" /> Remove Expiration Date
-                      </Button>
-                    )}
                     <FormMessage />
                   </FormItem>
                 )}
